@@ -1,0 +1,55 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Create Product</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f4f6f8; }
+    form {
+      background: white; padding: 2rem; border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1); max-width: 600px;
+    }
+    input, textarea, select {
+      width: 100%; padding: 0.5rem; margin-bottom: 1rem;
+      border: 1px solid #ccc; border-radius: 6px;
+    }
+    button {
+      background: #0070f3; color: white; padding: 0.6rem 1rem;
+      border: none; border-radius: 6px; cursor: pointer;
+    }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Create New Product</h1>
+  {% if error_message %}
+    <p class="error">{{ error_message }}</p>
+  {% endif %}
+  <form method="POST">
+    {% csrf_token %}
+    <label>Title:</label>
+    <input type="text" name="title" required value="{{ form_data.title|default:'' }}">
+
+    <label>Description:</label>
+    <textarea name="description">{{ form_data.description|default:'' }}</textarea>
+
+    <label>Status:</label>
+    <select name="status">
+      <option value="ACTIVE">Active</option>
+      <option value="DRAFT">Draft</option>
+      <option value="ARCHIVED">Archived</option>
+    </select>
+
+    <label>Vendor:</label>
+    <input type="text" name="vendor" value="{{ form_data.vendor|default:'' }}">
+
+    <label>Product Type:</label>
+    <input type="text" name="product_type" value="{{ form_data.product_type|default:'' }}">
+
+    <label>Tags:</label>
+    <input type="text" name="tags" value="{{ form_data.tags|default:'' }}">
+
+    <button type="submit">Create Product</button>
+  </form>
+</body>
+</html> {% endcomment %}

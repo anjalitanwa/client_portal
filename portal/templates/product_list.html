@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shopify Products</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f5f7fa; }
+    h1 { color: #333; }
+    .product-card {
+      background: white; border-radius: 12px; padding: 1rem;
+      margin-bottom: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .product-card h2 { margin: 0; }
+    a.button {
+      display: inline-block; margin-top: 0.5rem; padding: 0.4rem 1rem;
+      background: #0070f3; color: white; border-radius: 6px; text-decoration: none;
+    }
+    .create-link { margin-bottom: 1rem; display: inline-block; }
+  </style>
+</head>
+<body>
+  <h1>Shopify Product List</h1>
+
+  {% if error_message %}
+    <p style="color:red;">{{ error_message }}</p>
+  {% endif %}
+
+  <a href="{% url 'create_product' %}" class="create-link button">+ Create Product</a>
+
+  {% for product in products %}
+  <div class="product-card">
+    <h2>{{ product.title }}</h2>
+    <p><strong>ID:</strong> {{ product.id }}</p>
+    <p><strong>Status:</strong> {{ product.status }}</p>
+    <a href="{% url 'product_detail' product.id %}" class="button">View Details</a>
+  </div>
+  {% empty %}
+  <p>No products found.</p>
+  {% endfor %}
+</body>
+</html>

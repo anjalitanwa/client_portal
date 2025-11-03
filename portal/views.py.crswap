@@ -1,0 +1,68 @@
+
+from django.shortcuts import render
+from django.http import JsonResponse
+from .shopify_service import ShopifyMCPService
+import json 
+
+shopify_service = ShopifyMCPService()
+
+def product_list_view(request):
+    """Displays a list of products from the Shopify store."""
+    try:
+        api_response = shopify_service.list_products()
+        
+        if "error" in api_response:
+            return render(request, "product_list.html", {"error_message": api_response["error"]["message"]})
+        
+        # CORRECTLY Parse the nested response from the MCP server
+        response_text = api_response.get("result", {}).get("content", [{}])[0].get("text", "{}")
+        products_data = json.loads(response_text)
+        products = products_data.get("products", [])
+        
+        return render(request, "product_list.html", {"products": products})
+    except Exception as e:
+        return render(request, "product_list.html", {"error_message": str(e)})
+
+def product_detail_view(request, product_id):
+   
+    try:
+        api_response = shopify_service.get_product_by_id(product_id)
+        
+        context = {}
+        if "error" in api_response:
+            context['error_message'] = api_response['error']['message']
+            context['product'] = None
+        else:
+            # CORRECTLY Parse the nested response
+            response_text = api_response.get("result", {}).get("content", [{}])[0].get("text", "{}")
+            product_data = json.loads(response_text)
+            context['product'] = product_data
+            context['error_message'] = None
+
+        return render(request, 'product_detail.html', context)
+    except Exception as e:
+        return render(request, 'product_detail.html', {"error_message": str(e)})
+
+def create_sample_product_view(request):
+    """A helper view to create a sample product for testing purposes."""
+    print("--- Creating a sample product ---")
+    api_response = shopify_service.create_product(
+        title="My Test T-Shirt",
+        description_html="<p>A comfortable t-shirt for testing purposes.</p>",
+        status="ACTIVE" # Make it visible immediately
+    )
+    print("--- Finished creating product ---")
+    return JsonResponse(api_response)
+
+
+def test_connection_view(request):
+    """Tests the connection to the MCP server and returns the product count."""
+    print("--- Testing Connection to Shopify MCP Server ---")
+    api_response = shopify_service.get_product_count()
+    print("--- Finished Test ---")
+    return JsonResponse(api_response)
+
+
+def debug_view(request):
+    """A simple debug view to test if Django is working."""
+    return JsonResponse({"status": "debug", "message": "Django is working correctly!"})

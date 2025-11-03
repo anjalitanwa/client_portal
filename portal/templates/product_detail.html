@@ -1,0 +1,32 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Product Details</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #fafafa; }
+    .container {
+      background: white; padding: 2rem; border-radius: 10px; 
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    a { text-decoration: none; color: #0070f3; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    {% if error_message %}
+      <h2 style="color:red;">{{ error_message }}</h2>
+    {% else %}
+      <h1>{{ product.title }}</h1>
+      <p><strong>ID:</strong> {{ product.id }}</p>
+      <p><strong>Status:</strong> {{ product.status }}</p>
+      <p><strong>Vendor:</strong> {{ product.vendor }}</p>
+      <p><strong>Product Type:</strong> {{ product.product_type }}</p>
+      <p><strong>Description:</strong></p>
+      <div>{{ product.body_html|safe }}</div>
+    {% endif %}
+    <br />
+    <a href="{% url 'product_list' %}">← Back to list</a>
+  </div>
+</body>
+</html> {% endcomment %}
